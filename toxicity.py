@@ -29,11 +29,21 @@ examples = [
 #   "This is coming along nicely"  
 # ]
 
-inputs = ["oranges are good"]
+def toxicity_filter(inputs):
+  """
+  Takes in a list of strings (sentences)
+  Returns a list of strings without toxic sentences
+  """
+  outputs = []
+  response = co.classify(  
+      model='large',  
+      inputs=inputs,  
+      examples=examples)
+  for i in range(len(inputs)):
+    diagnosis = (str(response.classifications[i]))[28]
+    if diagnosis == 'B':
+      outputs.append(inputs[i])
+  return outputs
 
-response = co.classify(  
-    model='large',  
-    inputs=inputs,  
-    examples=examples)
-
-print(response.classifications)
+# inputs = ["oranges are good", "apples are bad"]
+# print(toxicity_filter(inputs))
