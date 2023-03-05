@@ -2,7 +2,7 @@ import cohere
 from cohere.classify import Example
 co = cohere.Client('yiOWD4KfXSiayGiim2MRmZRUvGsbdEFOY5QaCQ1Z') # This is your trial API key
 
-# inputs = ["This item was broken when it arrived", "School is so fun!", "This item broke after 3 weeks"]
+# inputs = ["I love school", "This item was broken when it arrived", "School is so fun!", "This item broke after 3 weeks"]
 
 examples=[
     Example("i felt anger when at the end of a telephone call", "anger"), 
@@ -69,7 +69,8 @@ def sentiment_analysis(inputs):
     emotion = (str(response.classifications[i]))[28:end-1]
     emotions[emotion] += 1
   
-  index_majority = max(emotions.values())
-  return labels[index_majority]
+  index_majority = max(emotions, key=emotions.get)
+
+  return index_majority
 
 # print(sentiment_analysis(inputs))
