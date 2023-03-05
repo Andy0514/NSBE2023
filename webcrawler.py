@@ -27,6 +27,7 @@ for i in range(1, 10000):
         print(str((count * 100) / 10950) + "% finished")
 
 print("Found " + str(len(videos)) + " videos")
+print(videos)
 
 def getWord(videos):
     w = []
