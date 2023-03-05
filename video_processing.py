@@ -23,16 +23,33 @@ def text_to_video(input):
     if os.path.exists(tempfile):
         os.remove(tempfile)
 
-    words = input.split()
+    words = input.replace(".", "").lower().split()
+    upperlim = len(words)
+    i = 0
     clips = []
-    for w in words:
-        w = w.lower()
+
+    while i < upperlim:
+        w = words[i]
+
+        # skipped words
+        if (w == "be" or w == "of" or w == "is" or w == "are" or w == "a" or w == "an"):
+            i += 1
+            continue
+
+        # special combination words
+        if (i < upperlim - 1):
+            if w == "i" and words[i+1] == "am":
+                clips.append(VideoFileClip(join(video_dir, "i_am.mp4"), target_resolution=(240, 320)))
+                i += 2
+                continue
+
         if w in video_dict:
             clips.append(VideoFileClip(video_dict[w], target_resolution=(240, 320)))
         else:
             closest_word = cosine_similarity.find_closest_word(w)
             print("Found replacement: " + closest_word + " for " + w)
             clips.append(VideoFileClip(video_dict[closest_word], target_resolution=(240, 320)))
+        i += 1
 
     finalClip = concatenate_videoclips(clips)
     finalClip.write_videofile(tempfile)
@@ -75,4 +92,4 @@ with open('embeddings.pkl', 'wb') as fp:
     print('Embeddings saved successfully to file')
 '''
 
-text_to_video("today absorb academic right")
+text_to_video("I have an apple")
