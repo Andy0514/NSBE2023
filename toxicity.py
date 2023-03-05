@@ -10,7 +10,12 @@ examples = [
   Example("get a brain and use it", "Toxic"), 
   Example("say what you mean, you jerk.", "Toxic"), 
   Example("Are you really this stupid", "Toxic"), 
-  Example("I will honestly kill you", "Toxic"),  
+  Example("I will honestly kill you", "Toxic"),
+  Example("You don't belong here", "Toxic"),
+  Example("Do you not have a brain?", "Toxic"),
+  Example("What is wrong with you?", "Toxic"),
+  Example("Why are you so bad at this", "Toxic"),
+
   Example("yo how are you", "Benign"),  
   Example("I'm curious, how did that happen", "Benign"),  
   Example("Try that again", "Benign"),  
@@ -19,7 +24,11 @@ examples = [
   Example("That is an interesting point", "Benign"), 
   Example("I love this", "Benign"), 
   Example("We should try that sometime", "Benign"), 
-  Example("You should go for it", "Benign")
+  Example("You should go for it", "Benign"),
+  Example("I know you can do this", "Benign"),
+  Example("How are you feeling?", "Benign"),
+  Example("You're an awesome person", "Benign"),
+  Example("Thank you very much, you're my lifesaver", "Benign")
 ]
 
 # inputs = [
@@ -32,18 +41,20 @@ examples = [
 def toxicity_filter(inputs):
   """
   Takes in a list of strings (sentences)
-  Returns a list of strings without toxic sentences
+  Returns a list of strings and its toxicity
   """
   outputs = []
-  response = co.classify(  
-      model='large',  
-      inputs=inputs,  
+  response = co.classify(
+      model='large',
+      inputs=inputs,
       examples=examples)
+
   for i in range(len(inputs)):
-    diagnosis = (str(response.classifications[i]))[28]
-    if diagnosis == 'B':
-      outputs.append(inputs[i])
+    classification = response.classifications[i]
+    if classification.prediction == "Toxic" and classification.confidence > 0.8:
+      outputs.append([inputs[i], "toxic"])
+    else:
+      outputs.append([inputs[i], "benign"])
   return outputs
 
-# inputs = ["oranges are good", "apples are bad"]
-# print(toxicity_filter(inputs))
+
