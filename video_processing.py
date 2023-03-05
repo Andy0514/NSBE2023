@@ -65,4 +65,4 @@ with open('embeddings.pkl', 'wb') as fp:
     print('Embeddings saved successfully to file')
 '''
 
-text_to_video("today absorb academic right")
+#text_to_video("today absorb academic right")
