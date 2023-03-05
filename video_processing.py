@@ -6,7 +6,7 @@ import cohere
 import pickle
 import cosine_similarity
 co = cohere.Client('yiOWD4KfXSiayGiim2MRmZRUvGsbdEFOY5QaCQ1Z') # This is your trial API key
-
+import time
 
 #  Setup - get the list of all available words in the dictionary
 video_dict = dict()
@@ -38,7 +38,7 @@ def text_to_video(input):
     finalClip.write_videofile(tempfile)
     return tempfile
 
-def compute_embeddings_one_time(words):
+def compute_embeddings_one_time_96(words):
     embeddings = dict()
     i = 0
     temp = []
@@ -58,6 +58,16 @@ def compute_embeddings_one_time(words):
             temp = []
     return embeddings
 
+def compute_embeddings_one_time(words):
+    embeddings = dict()
+    for k in words.keys():
+        response = co.embed(texts=[k], model="small")
+        embeddings[k] = response.embeddings[0]
+        time.sleep(1)
+        print(k)
+        print(embeddings[k])
+    return embeddings
+
 '''
 embed = compute_embeddings_one_time(video_dict)
 with open('embeddings.pkl', 'wb') as fp:
@@ -65,4 +75,4 @@ with open('embeddings.pkl', 'wb') as fp:
     print('Embeddings saved successfully to file')
 '''
 
-#text_to_video("today absorb academic right")
+text_to_video("today absorb academic right")

@@ -19,15 +19,18 @@ def cosine_similarity(x, y):
 
 def find_closest_word(word):
     closest_match = ""
-    smallest_sim = 9999999
+    largest_sim = 0
     word_embed = co.embed(texts=[word], model="small").embeddings[0]
 
     for k, v in embed.items():
         curr = cosine_similarity(v, word_embed)
+        if (k == "absorb"):
+            print(v)
+            print(word_embed)
+            print(curr)
 
-        if (curr < smallest_sim):
-            smallest_sim = curr
+        if (curr > largest_sim):
+            largest_sim = curr
             closest_match = k
 
     return closest_match
-
